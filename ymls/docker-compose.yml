@@ -1,0 +1,37 @@
+# yml demonstrativo.
+version: "1.0"
+
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: postgresdb
+    volumes:
+      - lpfdata:/var/lib/postgresql/data
+    networks:
+      - nome-aplicacao
+    expose:
+      - "3306"
+    environment:
+      POSTGRES_PASSWORD: 'senha'
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+
+  lpf:
+    image: lpla/nome-aplicacao:1.0
+    container_name: aplicacao
+    networks:
+      - nome-aplicacao
+    ports:
+      - "8080:8080/tcp"
+    environment:
+      IPDOSERVIDOR: '0.0.0.0'
+    depends_on:
+      - postgres
+
+networks:
+  nome-aplicacao:
+    name: nome-aplicacao
+
+volumes:
+  lpfdata:
+    name: lpfdata
